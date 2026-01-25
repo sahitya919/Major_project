@@ -22,7 +22,11 @@ class URLClassifier:
             'count_dash': url.count('-'),
             'count_digits': sum(c.isdigit() for c in url),
             'count_slash': url.count('/'),
-            'has_ip': 1 if re.match(r"https?://(?:\d{1,3}\.){3}\d{1,3}(?:[:/]|$)", url) else 0
+            'has_ip': 1 if re.match(r"https?://(?:\d{1,3}\.){3}\d{1,3}(?:[:/]|$)", url) else 0,
+            'has_login': 1 if 'login' in url.lower() else 0,
+            'has_verify': 1 if 'verify' in url.lower() else 0,
+            'has_account': 1 if 'account' in url.lower() else 0,
+            'has_secure': 1 if 'secure' in url.lower() else 0
         }
         match = re.match(r"https?://([^/]+)", url)
         features['hostname_length'] = len(match.group(1)) if match else 0
@@ -71,6 +75,7 @@ class URLClassifier:
             print("[WARNING] URL Model not trained.")
             return 0
         
-        features = self.extract_features(url).values.reshape(1, -1)
-        prob = self.model.predict_proba(features)[0][1]
+        features_series = self.extract_features(url)
+        features_df = pd.DataFrame([features_series])
+        prob = self.model.predict_proba(features_df)[0][1]
         return prob

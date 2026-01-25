@@ -30,12 +30,15 @@ class PhishingDetectionSystem:
         """
         Dynamic input type detection.
         """
+        # Strip quotes that might be present from copy-paste
+        clean_input = decrypted_input.strip('"\'')
+        
         # Check if it's a file path to an image
-        if os.path.exists(decrypted_input) and self.ocr.is_image(decrypted_input):
+        if os.path.exists(clean_input) and self.ocr.is_image(clean_input):
             return 'IMAGE'
         
         # Check if URL (simple regex)
-        if re.match(r"https?://", decrypted_input) or re.match(r"www\.", decrypted_input):
+        if re.match(r"https?://", clean_input) or re.match(r"www\.", clean_input):
             return 'URL'
         
         # Default to text
@@ -46,7 +49,7 @@ class PhishingDetectionSystem:
         Main processing logic: Decrypt -> Identify -> Predict
         """
         # 1. Decrypt
-        decrypted = self.encryption.try_decrypt(input_data)
+        decrypted = self.encryption.try_decrypt(input_data).strip('"\'')
         
         # 2. Identify Type
         input_type = self.detect_input_type(decrypted)
