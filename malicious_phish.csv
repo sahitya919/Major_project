@@ -1,0 +1,7 @@
+url,type
+http://google.com,benign
+http://phish-login.com,phishing
+http://youtube.com,benign
+http://secure-bank-verify.com/login,phishing
+https://wikipedia.org,benign
+http://192.168.1.1/login,phishing
