@@ -48,7 +48,7 @@ class URLClassifier:
                  print("[ERROR] CSV must contain 'url' and 'type' columns.")
                  return
 
-            url_df['label'] = url_df['type'].apply(lambda x: 1 if x == 'phishing' else 0)
+            url_df['label'] = url_df['type'].apply(lambda x: 0 if x == 'benign' else 1)
             
             # Feature extraction
             url_features = url_df['url'].apply(self.extract_features)
@@ -58,6 +58,7 @@ class URLClassifier:
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
             
             self.model = RandomForestClassifier(n_estimators=100, random_state=42)
+            print(f"[INFO] Model initialized. Fitting on {len(X_train)} samples...")
             self.model.fit(X_train, y_train)
             
             # Evaluate

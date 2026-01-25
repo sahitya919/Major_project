@@ -22,7 +22,7 @@ class TextClassifier:
             email_df = pd.read_csv(csv_path)
             # Basic validation
             if 'text_combined' not in email_df.columns or 'label' not in email_df.columns:
-                print("[ERROR] CSV must contain 'text_combined' and 'label' columns.")
+                print(f"[ERROR] CSV must contain 'text_combined' and 'label' columns. Found: {email_df.columns.tolist()}")
                 return
 
             email_df = email_df.dropna(subset=['text_combined', 'label'])
