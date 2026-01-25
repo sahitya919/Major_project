@@ -37,8 +37,11 @@ class PhishingDetectionSystem:
         if os.path.exists(clean_input) and self.ocr.is_image(clean_input):
             return 'IMAGE'
         
-        # Check if URL (simple regex)
-        if re.match(r"https?://", clean_input) or re.match(r"www\.", clean_input):
+        # Check if URL (simple regex) - Expanded to include naked domains
+        # Matches http://, https://, www., or just domain.tld (basic)
+        if (re.match(r"https?://", clean_input) or 
+            re.match(r"www\.", clean_input) or 
+            re.match(r"^[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", clean_input)):
             return 'URL'
         
         # Default to text
