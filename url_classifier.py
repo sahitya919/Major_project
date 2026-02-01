@@ -44,14 +44,22 @@ class URLClassifier:
         try:
             url_df = pd.read_csv(csv_path)
             # Basic validation of columns
-            if 'url' not in url_df.columns or 'type' not in url_df.columns:
-                 print("[ERROR] CSV must contain 'url' and 'type' columns.")
+            target_col = None
+            if 'URL' in url_df.columns and 'label' in url_df.columns:
+                 # PhiUSIIL dataset: 0=Phishing, 1=Legitimate
+                 # We want 1=Phishing, 0=Legitimate
+                 url_df['label'] = url_df['label'].apply(lambda x: 1 if x == 0 else 0)
+                 target_col = 'URL'
+            elif 'url' in url_df.columns and 'type' in url_df.columns:
+                 # Old dataset
+                 url_df['label'] = url_df['type'].apply(lambda x: 0 if x == 'benign' else 1)
+                 target_col = 'url'
+            else:
+                 print("[ERROR] CSV must contain ('URL', 'label') or ('url', 'type') columns.")
                  return
-
-            url_df['label'] = url_df['type'].apply(lambda x: 0 if x == 'benign' else 1)
             
             # Feature extraction
-            url_features = url_df['url'].apply(self.extract_features)
+            url_features = url_df[target_col].apply(self.extract_features)
             X = url_features
             y = url_df['label']
 

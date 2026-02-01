@@ -14,7 +14,7 @@ class PhishingDetectionSystem:
         self.ocr = OCRUtils()
         
         # Training data paths
-        self.url_data = "malicious_phish.csv"
+        self.url_data = "PhiUSIIL_Phishing_URL_Dataset.csv"
         self.email_data = "phishing_email.csv"
 
     def initialize_models(self):
